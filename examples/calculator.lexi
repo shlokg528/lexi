@@ -1,0 +1,77 @@
+# Simple Calculator in Lexi
+# Demonstrates functions with return values
+
+display "╔════════════════════════════════════════════╗"
+display "║         CALCULATOR                         ║"
+display "╚════════════════════════════════════════════╝"
+display ""
+
+# Define calculator functions
+
+function add a b
+    set sum to a + b
+    return sum
+end
+
+function subtract a b
+    set diff to a - b
+    return diff
+end
+
+function multiply a b
+    set product to a * b
+    return product
+end
+
+function divide a b
+    if b == 0
+        display "Error: Division by zero!"
+        return 0
+    else
+        set quotient to a / b
+        return quotient
+    end
+end
+
+function power base exp
+    set result to 1
+    for i from 1 to exp
+        set result to result * base
+    end
+    return result
+end
+
+# Main program
+display "Enter first number:"
+ask for num1
+
+display "Enter second number:"
+ask for num2
+
+display ""
+display "Results:"
+display "────────────────────────────────────────"
+
+# Addition
+set result to call add with num1, num2
+display num1 + " + " + num2 + " = " + result
+
+# Subtraction
+set result to call subtract with num1, num2
+display num1 + " - " + num2 + " = " + result
+
+# Multiplication
+set result to call multiply with num1, num2
+display num1 + " × " + num2 + " = " + result
+
+# Division
+set result to call divide with num1, num2
+display num1 + " ÷ " + num2 + " = " + result
+
+# Power
+set result to call power with num1, num2
+display num1 + " ^ " + num2 + " = " + result
+
+display ""
+display "────────────────────────────────────────"
+display "Thank you for using Lexi Calculator!"

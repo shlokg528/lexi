@@ -1,0 +1,281 @@
+# ================================================
+# PERSONAL FINANCE CALCULATOR
+# A showcase program in Lexi
+# ================================================
+# Features demonstrated:
+# - Functions with return values
+# - User input
+# - Loops and conditions
+# - Calculations with proper precedence
+# - Arrays for data storage
+# - Natural language syntax
+# ================================================
+
+display "╔════════════════════════════════════════════╗"
+display "║   PERSONAL FINANCE CALCULATOR              ║"
+display "║   Powered by Lexi                          ║"
+display "╚════════════════════════════════════════════╝"
+display ""
+
+# ================================================
+# FUNCTION: Calculate monthly payment
+# Formula: P * (r * (1+r)^n) / ((1+r)^n - 1)
+# ================================================
+
+function calculateMonthlyPayment principal rate months
+    # Convert annual rate to monthly decimal
+    set monthlyRate to rate / 12
+    set monthlyRate to monthlyRate / 100
+    
+    # Calculate (1 + r)^n using power
+    set onePlusRate to monthlyRate + 1
+    set factor to 1
+    
+    # Simple power calculation (since we don't have ^ in compound expressions)
+    for i from 1 to months
+        set factor to factor * onePlusRate
+    end
+    
+    # Calculate numerator: P * r * factor
+    set numerator to principal * monthlyRate
+    set numerator to numerator * factor
+    
+    # Calculate denominator: factor - 1
+    set denominator to factor - 1
+    
+    # Monthly payment
+    if denominator > 0
+        set payment to numerator / denominator
+        return payment
+    else
+        return 0
+    end
+end
+
+# ================================================
+# FUNCTION: Determine savings category
+# ================================================
+
+function getSavingsLevel amount
+    if amount >= 10000
+        return 3
+    elseif amount >= 5000
+        return 2
+    elseif amount >= 1000
+        return 1
+    else
+        return 0
+    end
+end
+
+# ================================================
+# FUNCTION: Calculate tax
+# ================================================
+
+function calculateTax income
+    set tax to 0
+    
+    if income > 50000
+        set tax to income * 25
+        set tax to tax / 100
+    elseif income > 30000
+        set tax to income * 20
+        set tax to tax / 100
+    elseif income > 15000
+        set tax to income * 15
+        set tax to tax / 100
+    else
+        set tax to income * 10
+        set tax to tax / 100
+    end
+    
+    return tax
+end
+
+# ================================================
+# MAIN PROGRAM
+# ================================================
+
+display "Welcome! Let's analyze your finances."
+display ""
+
+# Get user information
+display "What is your name?"
+ask for userName
+
+display ""
+display "Hello, " + userName + "!"
+display ""
+
+# Income calculation
+display "─────────────────────────────────────"
+display "INCOME ANALYSIS"
+display "─────────────────────────────────────"
+
+display "What is your monthly income?"
+ask for monthlyIncome
+
+set annualIncome to monthlyIncome * 12
+display "Your annual income: $" + annualIncome
+
+# Calculate tax
+set taxAmount to call calculateTax with annualIncome
+display "Estimated annual tax: $" + taxAmount
+
+set afterTax to annualIncome - taxAmount
+display "Income after tax: $" + afterTax
+display ""
+
+# Expense tracking
+display "─────────────────────────────────────"
+display "EXPENSE TRACKING"
+display "─────────────────────────────────────"
+
+create list expenses
+set totalExpenses to 0
+
+display "How many expense categories?"
+ask for numCategories
+
+for categoryNum from 1 to numCategories
+    display ""
+    display "Category #" + categoryNum
+    display "Enter monthly expense amount:"
+    ask for expenseAmount
+    
+    add expenseAmount to expenses
+    set totalExpenses to totalExpenses + expenseAmount
+end
+
+display ""
+display "Total monthly expenses: $" + totalExpenses
+
+set annualExpenses to totalExpenses * 12
+display "Total annual expenses: $" + annualExpenses
+display ""
+
+# Savings calculation
+display "─────────────────────────────────────"
+display "SAVINGS ANALYSIS"
+display "─────────────────────────────────────"
+
+set monthlyAfterTax to afterTax / 12
+set monthlySavings to monthlyAfterTax - totalExpenses
+
+display "Monthly income after tax: $" + monthlyAfterTax
+display "Monthly savings potential: $" + monthlySavings
+
+if monthlySavings > 0
+    display "✓ Great! You're saving money!"
+    
+    set annualSavings to monthlySavings * 12
+    display "Annual savings: $" + annualSavings
+    
+    # Determine savings level
+    set savingsLevel to call getSavingsLevel with annualSavings
+    
+    if savingsLevel == 3
+        display "🌟 Excellent! You're building wealth!"
+    elseif savingsLevel == 2
+        display "👍 Good! Keep it up!"
+    elseif savingsLevel == 1
+        display "📈 You're on the right track!"
+    else
+        display "💪 Every bit counts!"
+    end
+else
+    display "⚠️  Warning: You're spending more than you earn!"
+    set deficit to 0 - monthlySavings
+    display "Monthly deficit: $" + deficit
+    display "Consider reducing expenses."
+end
+
+display ""
+
+# Loan calculation (if applicable)
+display "─────────────────────────────────────"
+display "LOAN CALCULATOR"
+display "─────────────────────────────────────"
+
+display "Do you have a loan? (enter 1 for yes, 0 for no)"
+ask for hasLoan
+
+if hasLoan == 1
+    display ""
+    display "Enter loan amount:"
+    ask for loanAmount
+    
+    display "Enter annual interest rate (%):"
+    ask for interestRate
+    
+    display "Enter loan term (months):"
+    ask for loanMonths
+    
+    # Calculate payment
+    set monthlyPayment to call calculateMonthlyPayment with loanAmount, interestRate, loanMonths
+    
+    display ""
+    display "Monthly payment: $" + monthlyPayment
+    
+    set totalPayment to monthlyPayment * loanMonths
+    display "Total amount to pay: $" + totalPayment
+    
+    set totalInterest to totalPayment - loanAmount
+    display "Total interest: $" + totalInterest
+    
+    # Check affordability
+    if monthlyPayment <= monthlySavings
+        display "✓ This loan is affordable for you!"
+    else
+        display "⚠️  This loan may strain your budget."
+    end
+end
+
+display ""
+
+# Summary report
+display "════════════════════════════════════════"
+display "          FINANCIAL SUMMARY             "
+display "════════════════════════════════════════"
+
+display "Name: " + userName
+display "Annual Income: $" + annualIncome
+display "Annual Tax: $" + taxAmount
+display "Annual Expenses: $" + annualExpenses
+display "Annual Savings: $" + annualSavings
+
+# Calculate savings rate
+set savingsRate to annualSavings * 100
+set savingsRate to savingsRate / afterTax
+display "Savings Rate: " + savingsRate + "%"
+
+# Financial health score
+set healthScore to 0
+
+if savingsRate >= 20
+    increase healthScore by 3
+elseif savingsRate >= 10
+    increase healthScore by 2
+elseif savingsRate >= 5
+    increase healthScore by 1
+end
+
+if totalExpenses < monthlyAfterTax
+    increase healthScore by 2
+end
+
+display ""
+display "Financial Health Score: " + healthScore + "/5"
+
+if healthScore >= 4
+    display "💰 Excellent financial health!"
+elseif healthScore >= 2
+    display "💵 Moderate financial health."
+else
+    display "📊 Consider improving your finances."
+end
+
+display ""
+display "════════════════════════════════════════"
+display "Thank you for using Lexi Finance!"
+display "════════════════════════════════════════"

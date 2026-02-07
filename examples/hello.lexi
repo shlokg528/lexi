@@ -1,0 +1,14 @@
+# Hello World in Lexi
+
+display "Hello, World!"
+display "Welcome to Lexi Programming Language"
+
+# Get user's name
+display ""
+display "What is your name?"
+ask for userName
+
+# Greet the user
+display ""
+display "Hello, " + userName + "!"
+display "Nice to meet you."
